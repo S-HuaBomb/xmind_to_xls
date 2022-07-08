@@ -6,7 +6,6 @@ import argparse
 import pathlib
 import xlwt, xlrd
 from xmindparser import xmind_to_dict, xmind_to_xml, xmind_to_json
-import pysnooper
 
 
 class xmind_to_xx(object):
@@ -41,7 +40,7 @@ class xmind_to_xx(object):
         if not os.path.exists(xls_dir):
             pathlib.Path(xls_dir).mkdir(parents=True, exist_ok=True)
         self.workbook.save(self.xls_path)
-        print(f"xmind to xls saved in {self.xls_path}")
+        # print(f"xmind to xls saved in {self.xls_path}")
 
     # @pysnooper.snoop()
     def to_excel(self, topics, ex_column=0):
@@ -100,7 +99,7 @@ class style_excel(object):
         if path == 0:
             path = self.style_xls_path
         self.style_workbook.save(path)
-        print(f"xls styled finished")
+        # print(f"xls styled finished")
 
     def set_style(self):
         # 设置样式
@@ -210,13 +209,8 @@ class style_excel(object):
                     self.do_merge_excel(merge_row[0], merge_row[1], merge_row[2], merge_row[3])
 
 
-if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-xmind", help="path to xmind file", default='公共卫生应急预案管理系统.xmind')
-    args = parser.parse_args()
-
-    xmind_path, xmind_file = os.path.split(args.xmind)[0], os.path.split(args.xmind)[1]
+def run(xmind_file_path):
+    xmind_path, xmind_file = os.path.split(xmind_file_path)[0], os.path.split(xmind_file_path)[1]
     xls_path, xls_file = os.path.join(xmind_path, 'xls'), xmind_file.replace('xmind', 'xls')
 
     # 转xls
@@ -227,3 +221,12 @@ if __name__ == '__main__':
     b = style_excel(xls_path, xls_file, a.data_dict[0]['topic']['title'])
     b.merge_excel(b.calculate())
     b.save_style_excel(os.path.join(xls_path, xls_file))
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-xmind", help="path to xmind file", default='公共卫生应急预案管理系统_.xmind')
+    args = parser.parse_args()
+
+    run(args.xmind)
